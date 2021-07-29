@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: "json"} do
     namespace :v1 do
       resources :api_keys, only: %i[index create destroy]
+      resources :movies, only: [:show, :index]
     end
   end
 end
