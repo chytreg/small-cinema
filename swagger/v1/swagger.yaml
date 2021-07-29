@@ -3,9 +3,401 @@ openapi: 3.0.1
 info:
   title: API V1
   version: v1
-paths: {}
+paths:
+  "/api/v1/api_keys":
+    get:
+      summary: Get api keys assigend to authenticated user
+      tags:
+      - api_keys
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Return all api_keys assigned to current bearer
+          content:
+            application/json:
+              example:
+              - id: 8ca22606-fc2e-48b1-8fc5-60c018fe00f9
+                bearer_id: aed0f130-13fb-4f73-bbf4-b82d3b45569f
+                bearer_type: User
+                created_at: '2021-07-29T13:50:19.936Z'
+                updated_at: '2021-07-29T13:50:19.936Z'
+              - id: 9cd1d856-7dcc-49c9-a8ea-553b30aa2b22
+                bearer_id: aed0f130-13fb-4f73-bbf4-b82d3b45569f
+                bearer_type: User
+                created_at: '2021-07-29T13:50:19.963Z'
+                updated_at: '2021-07-29T13:50:19.963Z'
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/api_key"
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              example:
+                errors:
+                - message: Unauthorized access
+    post:
+      summary: Authenticate and create new api key
+      tags:
+      - api_keys
+      security:
+      - basic_auth: []
+      responses:
+        '201':
+          description: new api key created
+          content:
+            application/json:
+              example:
+                id: 25dc0c1b-78a5-40b0-aa77-b757d66a9c54
+                token: fc566ff7158fcce4a41dd36f2ba4d4e5
+              schema:
+                "$ref": "#/components/schemas/api_key"
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              example:
+                errors:
+                - message: Unauthorized access
+  "/api/v1/api_keys/{id}":
+    delete:
+      summary: Delete api key by id
+      tags:
+      - api_keys
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: api key removed
+        '404':
+          description: api key not found
+          content:
+            application/json:
+              example:
+                errors:
+                - message: Couldn't find ApiKey with 'id'=999 [WHERE "api_keys"."bearer_id"
+                    = $1 AND "api_keys"."bearer_type" = $2]
+  "/api/v1/movies":
+    get:
+      summary: Get list of movies
+      tags:
+      - movies
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: List of movies
+          content:
+            application/json:
+              example:
+              - id: 6725992c-088b-4a83-9023-ab9b12d55d8f
+                imdb_id: tt0232501
+                title: The Fast and the Furious
+                plot: Los Angeles police officer Brian O'Conner must decide where
+                  his loyalty really lies when he becomes enamored with the street
+                  racing world he has been sent undercover to destroy.
+                poster: https://m.media-amazon.com/images/M/MV5BNzlkNzVjMDMtOTdhZC00MGE1LTkxODctMzFmMjkwZmMxZjFhXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg
+                created_at: '2021-07-29T13:50:20.369Z'
+                updated_at: '2021-07-29T13:50:20.369Z'
+              - id: 49213f0d-c75e-4ba0-ab4b-336eb354f187
+                imdb_id: tt0232502
+                title: The Fast and the Furious
+                plot: Los Angeles police officer Brian O'Conner must decide where
+                  his loyalty really lies when he becomes enamored with the street
+                  racing world he has been sent undercover to destroy.
+                poster: https://m.media-amazon.com/images/M/MV5BNzlkNzVjMDMtOTdhZC00MGE1LTkxODctMzFmMjkwZmMxZjFhXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg
+                created_at: '2021-07-29T13:50:20.379Z'
+                updated_at: '2021-07-29T13:50:20.379Z'
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/movie"
+  "/api/v1/movies/{id}":
+    get:
+      summary: Get movie data by id
+      tags:
+      - movies
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Details of movie
+          content:
+            application/json:
+              example:
+                id: cf0ecd4e-a232-43e3-b3f0-6ccdb957307d
+                imdb_id: tt0232503
+                title: 2 Fast 2 Furious
+                plot: Former cop Brian O'Conner is called upon to bust a dangerous
+                  criminal and he recruits the help of a former childhood friend and
+                  street racer who has a chance to redeem himself.
+                poster: https://m.media-amazon.com/images/M/MV5BMzExYjcyYWMtY2JkOC00NDUwLTg2OTgtMDI3MGY2OWQzMDE2XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg
+                created_at: '2021-07-29T13:50:20.516Z'
+                updated_at: '2021-07-29T13:50:20.516Z'
+                year: '2003'
+                rated: PG-13
+                released: 06 Jun 2003
+                runtime: 107 min
+                genre: Action, Crime, Thriller
+                director: John Singleton
+                writer: Gary Scott Thompson (characters), Michael Brandt (story),
+                  Derek Haas (story), Gary Scott Thompson (story), Michael Brandt
+                  (screenplay), Derek Haas (screenplay)
+                actors: Paul Walker, Tyrese Gibson, Eva Mendes, Cole Hauser
+                language: English, Spanish
+                country: USA, Germany
+                awards: 4 wins & 13 nominations.
+                ratings:
+                - source: Internet Movie Database
+                  value: 5.9/10
+                - source: Rotten Tomatoes
+                  value: 36%
+                - source: Metacritic
+                  value: 38/100
+                metascore: '38'
+                imdb_rating: '5.9'
+                imdb_votes: '256,725'
+                type: movie
+                dvd: 01 Jan 2015
+                box_office: "$127,154,901"
+                production: Universal/Universal Int
+                website: N/A
+              schema:
+                "$ref": "#/components/schemas/movie"
+        '404':
+          description: Movie not found
+          content:
+            application/json:
+              example:
+                errors:
+                - message: Couldn't find Movie
+  "/api/v1/movies/{movie_id}/showtimes":
+    get:
+      summary: Get all showtimes
+      tags:
+      - showtimes
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: movie_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Return all showtimes
+          content:
+            application/json:
+              example:
+              - id: c337bbb5-470a-4261-8ede-7a49244b6f1d
+                starts_at: '2021-07-31T13:50:20.664Z'
+                price: '20.91'
+                movie_id: 37f7ce86-31b0-4965-a5bb-4a3432fa914b
+                created_at: '2021-07-29T13:50:20.664Z'
+                updated_at: '2021-07-29T13:50:20.664Z'
+              - id: 51429d6b-6227-4b6a-87b7-7b7e37ac19dc
+                starts_at: '2021-07-31T13:50:20.674Z'
+                price: '20.91'
+                movie_id: 37f7ce86-31b0-4965-a5bb-4a3432fa914b
+                created_at: '2021-07-29T13:50:20.674Z'
+                updated_at: '2021-07-29T13:50:20.674Z'
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/showtime"
+    post:
+      summary: Create showtime record
+      tags:
+      - showtimes
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: movie_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Showtime created
+          content:
+            application/json:
+              example:
+                id: fac13195-aa5e-40e7-b814-88dee37182ba
+                starts_at: '2021-07-30T13:50:20.771Z'
+                price: '122.0'
+                movie_id: c4678d0e-3cd0-4648-85dd-bd91ca5e419a
+                created_at: '2021-07-29T13:50:20.802Z'
+                updated_at: '2021-07-29T13:50:20.802Z'
+              schema:
+                "$ref": "#/components/schemas/showtime"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                showtime_body:
+                  "$ref": "#/components/schemas/showtime_body"
+        required: true
+  "/api/v1/movies/{movie_id}/showtimes/{id}":
+    put:
+      summary: Update showtime by id
+      tags:
+      - showtimes
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: movie_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Showtime updated
+          content:
+            application/json:
+              example:
+                movie_id: a993caed-dba3-42a2-8676-9d5ebb22b470
+                starts_at: '2021-07-30T13:50:20.868Z'
+                price: '122.0'
+                id: 5bc0896d-7096-4b4a-a3fd-5ed03f30e52c
+                created_at: '2021-07-29T13:50:20.834Z'
+                updated_at: '2021-07-29T13:50:20.907Z'
+        '404':
+          description: Showtime not found
+          content:
+            application/json:
+              example:
+                errors:
+                - message: Couldn't find Showtime with 'id'=999 [WHERE "showtimes"."movie_id"
+                    = $1]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                showtime_body:
+                  "$ref": "#/components/schemas/showtime_body"
+        required: true
+    delete:
+      summary: Delete showtime by id
+      tags:
+      - showtimes
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: movie_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Showtime removed
+          content:
+            application/json:
+              example:
+                id: d6d0d3e6-9dfe-4cc6-8457-4178ff8eb551
+                starts_at: '2021-07-31T13:50:21.003Z'
+                price: '20.91'
+                movie_id: b64e10ea-4442-46d8-88f5-817a2c756eed
+                created_at: '2021-07-29T13:50:21.003Z'
+                updated_at: '2021-07-29T13:50:21.003Z'
+        '404':
+          description: Showtime not found
+          content:
+            application/json:
+              example:
+                errors:
+                - message: Couldn't find Showtime with 'id'=999 [WHERE "showtimes"."movie_id"
+                    = $1]
 servers:
 - url: https://{defaultHost}
   variables:
     defaultHost:
       default: www.example.com
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
+      in: header
+  schemas:
+    api_key:
+      type: object
+      properties:
+        id:
+          type: string
+        bearer_id:
+          type: string
+        bearer_type:
+          type: string
+      required:
+      - id
+    movie:
+      type: object
+      properties:
+        id:
+          type: string
+        imdb_id:
+          type: string
+        title:
+          type: string
+        plot:
+          type: string
+        poster:
+          type: string
+      required:
+      - id
+      - imdb_id
+      - title
+      - plot
+      - poster
+    showtime:
+      type: object
+      properties:
+        id:
+          type: string
+        movie_id:
+          type: string
+        price:
+          type: string
+        starts_at:
+          type: string
+      required:
+      - id
+      - movie_id
+      - price
+      - starts_at
